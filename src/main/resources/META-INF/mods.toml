@@ -1,0 +1,42 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+
+[[mods]]
+modId="material_generators"
+version="1.0.0"
+displayName="Material Generators"
+description='''
+Tiered generator blocks that slowly produce Create zinc, nether quartz and every vanilla wood type.
+'''
+
+[[dependencies.material_generators]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.material_generators]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1,1.21)"
+    ordering="NONE"
+    side="BOTH"
+
+# Create is optional: without it the zinc generators exist but stay idle and their recipes are disabled.
+[[dependencies.material_generators]]
+    modId="create"
+    mandatory=false
+    versionRange="[0.5.1,)"
+    ordering="AFTER"
+    side="BOTH"
+
+# The original Tiered Generators mod is optional: its Generator Core is used in our core recipe.
+# Without it, the core falls back to a redstone recipe.
+[[dependencies.material_generators]]
+    modId="tiered_generators"
+    mandatory=false
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
