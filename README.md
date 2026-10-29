@@ -66,6 +66,14 @@ generator in your inventory work. Generator and Duplicator items no longer stack
 * **Breaking a hub drops ONE hub item that carries everything**: every installed generator (with the items inside
   it, its switches and timer) and the expansions. Nothing falls out separately. Placing that hub item restores it all.
 
+## Storage Crate
+* **Recipe:** 8 planks of any wood in a ring (like a chest). Cheap and easy.
+* A chest-like block that starts with **18 slots** (2 rows) and uses the normal chest GUI, so hoppers, pipes and funnels
+  work with it. The GUI title shows how many slots it has.
+* **Crate Upgrade** (recipe: 4 planks + 1 iron ingot makes **2 upgrades**): right-click a crate with one to add a row of
+  9 slots. Four upgrades take it to the maximum of **54 slots** (6 rows).
+* Breaking a crate drops its items and gives the upgrades back.
+
 ## Duplicator
 * Recipe: 4 diamond blocks (corners), 4 obsidian (edges), 1 nether star (centre).
 * Put the item you want copied in the gold-framed slot. One copy every 5 seconds (`duplicator_speed`).

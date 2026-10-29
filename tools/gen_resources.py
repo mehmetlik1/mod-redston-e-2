@@ -222,6 +222,38 @@ def main():
         "result": {"item": f"{MOD}:generator_hub", "count": 1},
     })
 
+    # --- storage crate (cheap, vanilla ingredients only) + crate upgrade ---
+    pixel_art.make_crate_textures(os.path.join(ASSETS, "textures", "block"))
+    write(f"{ASSETS}/blockstates/storage_crate.json", {"variants": {"": {"model": f"{MOD}:block/storage_crate"}}})
+    write(f"{ASSETS}/models/block/storage_crate.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
+        "top": f"{MOD}:block/storage_crate_top", "bottom": f"{MOD}:block/storage_crate_top",
+        "side": f"{MOD}:block/storage_crate"}})
+    write(f"{ASSETS}/models/item/storage_crate.json", {"parent": f"{MOD}:block/storage_crate"})
+    write(f"{DATA}/loot_tables/blocks/storage_crate.json", {
+        "type": "minecraft:block",
+        "pools": [{"rolls": 1.0, "bonus_rolls": 0.0,
+                   "entries": [{"type": "minecraft:item", "name": f"{MOD}:storage_crate"}],
+                   "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+    write(os.path.join(ROOT, "resources", "data", "minecraft", "tags", "blocks", "mineable", "axe.json"),
+          {"replace": False, "values": [f"{MOD}:storage_crate"]})
+    lang[f"block.{MOD}.storage_crate"] = "Storage Crate"
+    # 8 planks (any wood) -> 1 crate, like a chest
+    write(f"{DATA}/recipes/storage_crate.json", {
+        "type": "minecraft:crafting_shaped", "category": "misc",
+        "pattern": ["ppp", "p p", "ppp"],
+        "key": {"p": {"tag": "minecraft:planks"}},
+        "result": {"item": f"{MOD}:storage_crate", "count": 1}})
+    pixel_art.make_crate_upgrade_icon(os.path.join(ASSETS, "textures", "item", "crate_upgrade.png"))
+    write(f"{ASSETS}/models/item/crate_upgrade.json",
+          {"parent": "minecraft:item/generated", "textures": {"layer0": f"{MOD}:item/crate_upgrade"}})
+    lang[f"item.{MOD}.crate_upgrade"] = "Crate Upgrade"
+    # 4 planks + 1 iron ingot -> 2 upgrades (each adds a row of 9 slots)
+    write(f"{DATA}/recipes/crate_upgrade.json", {
+        "type": "minecraft:crafting_shaped", "category": "misc",
+        "pattern": ["p p", " i ", "p p"],
+        "key": {"p": {"tag": "minecraft:planks"}, "i": {"item": "minecraft:iron_ingot"}},
+        "result": {"item": f"{MOD}:crate_upgrade", "count": 2}})
+
     # --- hub expansion item ---
     pixel_art.make_expansion_icon(os.path.join(ASSETS, "textures", "item", "hub_expansion.png"))
     write(f"{ASSETS}/models/item/hub_expansion.json",

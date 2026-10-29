@@ -112,6 +112,17 @@ public final class ModRegistry {
         return (GeneratorBlock) GENERATOR_BLOCKS.get(index).get();
     }
 
+    // ---- Storage Crate (+ its upgrade) ----
+    public static final RegistryObject<Block> CRATE = BLOCKS.register("storage_crate", StorageCrateBlock::new);
+    public static final RegistryObject<Item> CRATE_ITEM = ITEMS.register("storage_crate",
+            () -> new BlockItem(CRATE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> CRATE_UPGRADE = ITEMS.register("crate_upgrade",
+            () -> new CrateUpgradeItem(new Item.Properties()));
+    public static final RegistryObject<BlockEntityType<StorageCrateBlockEntity>> CRATE_BE =
+            BLOCK_ENTITIES.register("storage_crate", () -> BlockEntityType.Builder
+                    .of(StorageCrateBlockEntity::new, CRATE.get())
+                    .build(null));
+
     public static final RegistryObject<CreativeModeTab> TAB = TABS.register("main",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup." + MaterialGenerators.MOD_ID))

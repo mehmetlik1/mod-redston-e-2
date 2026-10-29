@@ -573,3 +573,77 @@ def make_expansion_icon(path):
     small = c.convert("RGBa").resize((32, 32), Image.BOX).convert("RGBA")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     small.save(path)
+
+
+# ------------------------------------------------------------------ Storage Crate + Crate Upgrade
+def make_crate_textures(directory):
+    """32x32 wooden crate: planks in an iron frame with an X brace (side), vertical planks in a frame (top/bottom)."""
+    rnd = random.Random(17)
+    iron = (82, 84, 96)
+
+    def wood(a, b):
+        """Colour of a plank pixel; a runs ALONG the plank, b ACROSS the planks (8 px per plank)."""
+        plank = b // 8
+        base = (168, 122, 68) if plank % 2 == 0 else (152, 108, 58)
+        c = shade(base, rnd.randint(-8, 8) + (6 if (a + plank * 5) % 11 < 2 else 0))
+        if b % 8 == 0:
+            c = shade(c, 20)                      # lit edge of a plank
+        if b % 8 == 7:
+            c = shade(c, -46)                     # gap between planks
+        return c
+
+    def frame(px, x, y):
+        if x < 3 or x > 28 or y < 3 or y > 28:
+            c = shade(iron, rnd.randint(-5, 5))
+            if x == 0 or y == 0:
+                c = shade(c, 24)
+            if x == 31 or y == 31:
+                c = shade(c, -30)
+            px[x, y] = c + (255,)
+            return True
+        return False
+
+    os.makedirs(directory, exist_ok=True)
+    side = Image.new("RGBA", (32, 32))
+    sp = side.load()
+    for y in range(32):
+        for x in range(32):
+            if not frame(sp, x, y):
+                sp[x, y] = wood(x, y) + (255,)
+    for t in range(3, 29):                                          # X brace
+        for off in (-1, 0, 1):
+            for (x, y) in ((t, t + off), (t, 31 - t + off)):
+                if 3 <= x <= 28 and 3 <= y <= 28:
+                    sp[x, y] = shade(iron, rnd.randint(-4, 4) + (12 if off == -1 else -10 if off == 1 else 0)) + (255,)
+    for (x, y) in ((1, 1), (30, 1), (1, 30), (30, 30)):             # rivets
+        sp[x, y] = (196, 198, 210, 255)
+    side.save(os.path.join(directory, "storage_crate.png"))
+
+    top = Image.new("RGBA", (32, 32))
+    tp = top.load()
+    for y in range(32):
+        for x in range(32):
+            if not frame(tp, x, y):
+                tp[x, y] = wood(y, x) + (255,)
+    for (x, y) in ((1, 1), (30, 1), (1, 30), (30, 30)):
+        tp[x, y] = (196, 198, 210, 255)
+    top.save(os.path.join(directory, "storage_crate_top.png"))
+
+
+def make_crate_upgrade_icon(path):
+    """32x32 item: a small wooden crate panel with iron corners and a green plus (= more space)."""
+    c = Image.new("RGBA", (CANVAS, CANVAS), (0, 0, 0, 0))
+    d = ImageDraw.Draw(c)
+    fill(c, lambda dd: dd.rounded_rectangle([14, 20, 114, 112], radius=10, fill=255),
+         (196, 146, 84), (118, 76, 34), "v", (40, 24, 10), grow=9)
+    for y in (50, 80):
+        d.line([(18, y), (110, y)], fill=(86, 54, 24), width=3)
+    for (x, y) in ((14, 20), (98, 20), (14, 96), (98, 96)):
+        d.rectangle([x, y, x + 16, y + 16], fill=(96, 98, 112), outline=(30, 30, 40), width=3)
+    d.line([(64, 34), (64, 98)], fill=(40, 120, 60), width=18)
+    d.line([(32, 66), (96, 66)], fill=(40, 120, 60), width=18)
+    d.line([(64, 36), (64, 96)], fill=(120, 240, 140), width=10)
+    d.line([(34, 66), (94, 66)], fill=(120, 240, 140), width=10)
+    small = c.convert("RGBa").resize((32, 32), Image.BOX).convert("RGBA")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    small.save(path)
